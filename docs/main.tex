@@ -1,0 +1,73 @@
+\documentclass[12pt, a4paper] {article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{anyfontsize}
+\graphicspath{{images/}}
+
+
+
+
+%\title {\Huge\toprule Doppio pendolo con base oscillante \bottomrule}
+%\author{\\Vittorio \textsc{Latrofa}\\Marta \textsc{Rosi} \\\\ }
+%\date{Da inserire}
+
+\begin{document}
+
+%\maketitle
+
+\newpage
+
+\section{Descrizione del sistema}
+Il sistema è composto da un carrello oscillante, al cui centro è saldata l'estremità superiore di un doppio pendolo. Il doppio pendolo è a sua volta un sottosistema composto da due aste, collegate in serie l'una all'altra. Il centro del carrello nell'istante iniziale è posizionato nell'origine del piano cartesiano scelto come riferimento. Ogni asta ha la sua lunghezza $l_i$ e massa tracurabile. All'estremità di ognuna di queste vi è una massa, rispettivamente $m_i$.
+Sia infine $\theta_i$ l'angolo fra l'asse verticale e l'i-esima asta del pendolo.
+\\\\
+immagine
+\section {Calcolo Lagrangiana}
+L'evoluzione temporale del sistema verrà indagata attraverso il calcolo della Lagrangiana e la sua derivazione. In particolare si avranno, nel caso del doppio pendolo, 2 gradi di libertà dettati dagli angoli $\theta_1$ e $\theta_2$, e quindi il problema si ridurrà alla risoluzione di un sistema in due equazioni di Eulero-Lagrange.
+\subsection{Posizioni e velocità cartesiane}
+Per arrivare a definire la Lagrangiana necessitiamo dell'energia cinetica T e dell'energia potenziale U del sistema. Ricaviamo quindi posizioni e velocità cartesiane delle masse, a partire dagli angoli $\theta_1$ e $\theta_2$.\\
+Partendo dalla prima massa, possiamo esprimere la sua posizione in coordinate cartesiane $(x_1,y_1)$ così:
+\[ x_1=x_0+l_1sin(\theta_1)\hspace{1cm}y_1=-l_1cos(\theta_1)\]
+Ponendo come $x_0$ l'ascissa del centro del carrello, che si sposta con legge oraria costante pari a:\[x_0=Acos(\omega t)\]
+È interessante notare come esclusivamente la componente orizziontale è influenzata dalla forzatura in ingresso.\\\\
+Proseguendo con la seconda massa, la sua posizione sarà descritta da:\[x_2=x_0+l_1sin(\theta_1)+l_2sin(\theta_2)\hspace{1cm}y_2=-l_1cos(\theta_1)-l_2cos(\theta_2)\]
+
+(Nota: Ho fatto i calcoli anche per N-dimensioni, nel caso si volesse ampliare, però evito di scriveli perché è uno sbatti)
+
+Deriviamo ora per ottenere le velocità:\[\dot x_n=-A\omega sin(\omega t)+\sum_{i=1}^{n} l_i\dot\theta_i cos(\theta_i)\hspace{1cm}\dot y_n=\sum_{i=1}^{n}l_i\dot\theta_i sin(\theta_i)\hspace{1cm}n\in[1,2]\]
+\subsection{Calcolo energia cinetica}
+Calcoliamo ora l'energia cinetica del sistema. Consideriamo prima il contributo di una singola asta: \[T_i=\frac{m_i}{2}(\dot x_i^2+\dot y_i^2)\]
+Calcoliamoci separatamente $\dot x_i^2$ e $\dot y_i^2$. Sapendo che \[(\sum_{k=1}^{n}a_k)^2=\sum_{i=1}^{n}\sum_{j=1}^{n}a_ia_j\]
+possiamo scrivere (con $n\in[1,2]$):
+\[\dot y_n^2=(\sum_{i=1}^{n}l_i\dot\theta_i sin(\theta_i))^2=\sum_{k=1}^{n}\sum_{j=1}^{n}l_kl_k\dot\theta_k \dot\theta_j sin(\theta_k)sin(\theta_j)\]
+\[\dot x_n^2=(-A\omega sin(\omega t)+\sum_{i=1}^{n}l_i\dot\theta_i cos(\theta_i))^2=\]\[=A^2\omega ^2 sin^2 (\omega t)- 2A\omega sin(\omega t)\sum_{i=1}^{n}l_i\dot\theta_icos(\theta_i)+\sum_{k=1}^{n}\sum_{j=1}^{n}l_kl_k\dot\theta_k \dot\theta_j cos(\theta_k)cos(\theta_j)\]
+\\Sostituiamo 1 e 2 ad n, per ottenere $T_1$ e $T_2$, e quindi l'energia cinetica totale pari a: \[T=T_1+T_2=\]\[=\frac{M_{tot}}{2}(A^2\omega ^2sin^2(\omega t)-2A\omega sin(\omega t)l_1\dot \theta_1 cos(\theta_1)+l_1^2\dot \theta_1^2)+\]\[+\frac{m_2}{2}(l_2^2\theta_2^2-2A\omega sin(\omega t)l_2\dot\theta_2cos(\theta_2)+2l_1l_2\dot\theta_1\dot\theta_2cos(\theta_1-\theta_2))\]\\
+Con $M_{tot}=m_1+m_2$.
+\subsection{Calcolo energia potenziale}
+Ricaviamo l'energia potenziale U.\[U=U_1+U_2=m_1gy_1+m_2gy_2=-M_{tot}gl_1cos(\theta_1)-m_2gl_2cos(\theta_2)\]
+\newpage
+\subsection{Lagrangiana}
+A questo punto possiamo esplicitare la Lagrangiana: \[L=T-U=\]\[=\frac{M_{tot}}{2}(A^2\omega ^2sin^2(\omega t)-2A\omega sin(\omega t)l_1\dot \theta_1 cos(\theta_1)+l_1^2\dot \theta_1^2+2gl_1cos(\theta_1))+\]\[+\frac{m_2}{2}(l_2^2\dot\theta_2^2-2A\omega sin(\omega t)l_2\dot\theta_2cos(\theta_2)+2l_1l_2\dot\theta_1\dot\theta_2cos(\theta_1-\theta_2)+2gl_2cos(\theta_2))\]
+\section{Derivazione Lagrangiana}
+Dalle equazioni di Eulero-Lagrange sappiamo che:
+\[\left\{
+\begin{aligned}
+\frac {d}{dt}\frac{\partial L}{\partial \dot\theta_1}-\frac{\partial L}{\partial \theta_1}=0 \\
+\frac {d}{dt}\frac{\partial L}{\partial \dot\theta_2}-\frac{\partial L}{\partial \theta_2}=0 
+\end{aligned}
+\right.\]
+Procediamo calcolando le derivate parziali, partendo dalla prima equazione:
+\[\frac{\partial L}{\partial \theta_1}=M_{tot}(A\omega sin(\omega t)l_1\dot\theta_1 sin(\theta_1)-2gl_1sin(\theta_1))-m_2(l_1l_2\dot\theta_1\dot\theta_2sin(\theta_1-\theta_2))\]
+\[\frac{\partial L}{\partial \dot\theta_1}=M_{tot}(l_1^2\dot \theta_1-A\omega sin(\omega t)l_1cos(\theta_1))+m_2(l_1l_2\dot\theta_2cos(\theta_1-\theta_2))\]
+A questo punto deriviamo nel tempo:
+\[\frac{d}{dt}\frac{\partial L}{\partial \dot\theta_1}=M_{tot}(l_1^2\ddot\theta_1+A\omega sin(\omega t)l_1\dot \theta_1 sin(\theta_1)-A\omega^2 cos(\omega t)l_1cos(\theta_1))+\]\[+m_2(l_1l_2\ddot\theta_2cos(\theta_1-\theta_2)-l_1l_2\dot\theta_2(\dot\theta_1-\dot\theta_2)sin(\theta_1-\theta_2))\]
+Continuando con la seconda equazione:
+\[\frac{\partial L}{\partial \theta_2}=m_2(l_1l_2\dot\theta_1\dot\theta_2sin(\theta_1-\theta_2)+A\omega sin(\omega t)l_2\dot\theta_2sin(\theta_2)-gl_2sin(\theta_2))\]
+\[\frac{\partial L}{\partial \dot\theta_2}=m_2(l_2^2\dot\theta_2-A\omega sin(\omega t)l_2cos(\theta_2)+l_1l_2\dot\theta_1cos(\theta_1-\theta_2))\]
+A questo punto derivimao nel tempo:
+\[\frac{d}{dt}\frac{\partial L}{\partial \dot\theta_2}=m_2(l_2^2\ddot\theta_2-A\omega^2cos(\omega t)l_2cos(\theta_2)+A\omega sin(\omega t)l_2\dot\theta_2sin(\theta_2)+\]\[+l_1l_2\ddot\theta_1cos(\theta_1-\theta_2)-l_1l_2\dot\theta_1(\dot\theta_1-\dot\theta_2)sin(\theta_1-\theta_2))\]
+
+
+\end{document}
