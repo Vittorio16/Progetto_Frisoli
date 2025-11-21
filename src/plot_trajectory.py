@@ -43,7 +43,7 @@ t_eval = np.linspace(t_span[0], t_span[1], 5000)
 solution = calc_trajectory(t_span, t_eval)
 
 x, y = compute_positions()
-print(y[0,:])
+
 
 fig, ax = plt.subplots()
 ax.set_aspect('equal')
