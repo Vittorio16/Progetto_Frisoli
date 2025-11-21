@@ -1,9 +1,17 @@
 import numpy as np
 import sympy as sp
+from scipy.integrate import solve_ivp
 
-NUMERO_PENDOLI = 2
-MASSE = np.array([1,1])
-LUNGHEZZE = np.array([1,1])
+g_val = 9.81
+A_val = 2
+w_val = 2 * np.pi * 0.4
+
+initial_time = 0
+initial_state_vector = np.radians(np.array([0,0,0,0,0,0]))
+
+NUMERO_PENDOLI = 3
+MASSE = np.array([1,1,1])
+LUNGHEZZE = np.array([1,0.5,0.25])
 
 # Describe all the symbols for simpy and lambdify
 t = sp.symbols('t')
@@ -19,7 +27,7 @@ m = sp.symbols(f"m1:{NUMERO_PENDOLI + 1}")
 g,A,w = sp.symbols("g A w")
 
 
-# Calculate the positions of each joint (x[-1] gets the last element)
+# Calculate the positions of each joint (x[-1] gets the last element) - each saved in the array except for the first one
 # Use Sympy to simbolically write equations and solve them
 x0 = A * sp.sin(w * t)
 
@@ -56,33 +64,44 @@ eq_subs = [eq_i.subs(subs_dict) for eq_i in eq]
 
 # Find M and f, and the dd_theta as M^(-1)*f by solving the Euler-Lagrange equations    
 M, f = sp.linear_eq_to_matrix(eq_subs, sym_theta_dot_dot)
-f = -f  # move RHS to the form M * dd_theta = f
 
 M = sp.simplify(M)
 f = sp.simplify(f)
 
 M_inv = sp.simplify(M.inv())
-dd_theta = sp.simplify(M_inv * (-f))
+dd_theta = sp.simplify(M_inv * (f))
 
 # Translates from symbolic to numerical, passing t for the forced joint position, and all the other necessary elements
 # It calculates dd_theta at time t
 ddtheta_fun = sp.lambdify([t] + theta + theta_dot + [*l, *m, g, A, w], dd_theta, 'numpy')
 
 
-def pendulum_ode(time, X, ddtheta_fun):
+# Given time and state, returns the theta_dot and theta_dot_dot array
+def pendulum_ode(t, state):
     
-    g_val = 9.81
-    A_val = 2
-    w_val = np.radians(5)
+    theta_vals = state[:NUMERO_PENDOLI]
+    theta_dot_vals = state[NUMERO_PENDOLI:]
 
-    args = [time] + list(X) + list(LUNGHEZZE) + list(MASSE) + [g_val, A_val, w_val]
+    args = [t] + list(theta_vals) + list(theta_dot_vals) \
+               + list(LUNGHEZZE) + list(MASSE) + [g_val, A_val, w_val]
+
+    dd_theta_vals = np.array(ddtheta_fun(*args)).flatten()
+
+    # return state derivative
+    return np.concatenate([theta_dot_vals, dd_theta_vals])
+
+
+# It integrates over the time span, returning samples according to t_eval
+def calc_trajectory(t_span, t_eval):
     
-    dd_theta_vals = np.array(ddtheta_fun(*args)).flatten
-
-
-
-initial_state_vector = np.radians(np.array([5,10,2,7]))
-t_start = 0
-
-
-
+    solution = solve_ivp(
+        pendulum_ode,
+        t_span,
+        initial_state_vector,
+        t_eval=t_eval,
+        method='RK45',
+        rtol=1e-9,
+        atol=1e-9
+    )
+    
+    return solution
